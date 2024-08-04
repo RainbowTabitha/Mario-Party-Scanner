@@ -41,7 +41,7 @@ class App(customtkinter.CTk):
             pass
 
         self.title("Mario Party Scanner")
-        self.geometry("1330x800")
+        self.geometry("770x800")
 
         self.ensure_config_exists()
         self.load_name_overrides()
@@ -130,24 +130,25 @@ class App(customtkinter.CTk):
 
     def update_coins_and_stars(self):
         game_id = self.check_game_id()
+        scene_id = self.get_scene_id(game_id)
+        if scene_id in [id for valid_ids in self.valid_scene_ids for id in valid_ids]:
+            if game_id:
+                if not self.coin_image:
+                    self.coin_image = self.load_coin_image(game_id)
+                if not self.star_image:
+                    self.star_image = self.load_star_image(game_id)
 
-        if game_id:
-            if not self.coin_image:
-                self.coin_image = self.load_coin_image(game_id)
-            if not self.star_image:
-                self.star_image = self.load_star_image(game_id)
+                for i in range(4):
+                    player_stars = self.get_player_stars(game_id, i)
+                    player_coins = self.get_player_coins(game_id, i)
 
-            for i in range(4):
-                player_stars = self.get_player_stars(game_id, i)
-                player_coins = self.get_player_coins(game_id, i)
+                    # Update coin label
+                    self.coin_labels[i].configure(image=self.coin_image, compound='left', pady=10, text=f" {player_coins}")
+                    self.coin_labels[i].image = self.coin_image
 
-                # Update coin label
-                self.coin_labels[i].configure(image=self.coin_image, compound='left', pady=10, text=f" {player_coins}")
-                self.coin_labels[i].image = self.coin_image
-
-                # Update star label
-                self.star_labels[i].configure(image=self.star_image, compound='left', pady=10, text=f" {player_stars}")
-                self.star_labels[i].image = self.star_image
+                    # Update star label
+                    self.star_labels[i].configure(image=self.star_image, compound='left', pady=10, text=f" {player_stars}")
+                    self.star_labels[i].image = self.star_image
 
         self.after(5000, self.update_coins_and_stars)  # Refresh every 5 seconds
 
