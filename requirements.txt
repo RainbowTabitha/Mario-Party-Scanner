@@ -1,0 +1,5 @@
+customtkinter
+tk
+Pillow
+pyinstaller == 5.13.2
+watchdog
