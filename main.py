@@ -32,6 +32,9 @@ class App(customtkinter.CTk):
         self.initial_load_done = False
         self.coin_image = None
         self.star_image = None
+        self.mg_star_image = None
+        self.coinStar_image = None
+        self.happening_image = None
         self.last_turn_zero_change_time = None
         self.delay_duration = 3500
 
@@ -62,6 +65,10 @@ class App(customtkinter.CTk):
         self.name_labels = []
         self.coin_labels = []
         self.star_labels = []
+        self.mg_star_labels = []
+        self.coin_star_labels = []
+        self.happening_star_labels = []
+
         for i in range(4):
             img_label = customtkinter.CTkLabel(self.home_frame, text="", width=150, height=150, corner_radius=8)
             img_label.grid(row=1, column=i, padx=10, pady=5, sticky="nsew")
@@ -78,6 +85,18 @@ class App(customtkinter.CTk):
             coin_label = customtkinter.CTkLabel(self.home_frame, text="", font=("Helvetica", 26))
             coin_label.grid(row=4, column=i, padx=10, pady=(2, 5), sticky="nsew")
             self.coin_labels.append(coin_label)
+
+            coin_star_label = customtkinter.CTkLabel(self.home_frame, text="", font=("Helvetica", 26))
+            coin_star_label.grid(row=6, column=i, padx=10, pady=(2, 5), sticky="nsew")
+            self.coin_star_labels.append(coin_star_label)
+
+            mg_star_label = customtkinter.CTkLabel(self.home_frame, text="", font=("Helvetica", 26))
+            mg_star_label.grid(row=5, column=i, padx=10, pady=(5, 2), sticky="nsew")
+            self.mg_star_labels.append(mg_star_label)
+
+            happening_star_label = customtkinter.CTkLabel(self.home_frame, text="", font=("Helvetica", 26))
+            happening_star_label.grid(row=7, column=i, padx=10, pady=(2, 5), sticky="nsew")
+            self.happening_star_labels.append(happening_star_label)
 
         self.cached_turn = None
         self.cached_final_turn = None
@@ -128,6 +147,66 @@ class App(customtkinter.CTk):
             pass
         return None
 
+    def load_happening_image(self, game_id):
+        if game_id == "GMPE01":
+            coin_image_path = "assets/mp4/happening.png"
+        elif game_id == "GP5E01":
+            coin_image_path = "assets/mp5/happening.png"
+        elif game_id == "GP6E01":
+            coin_image_path = "assets/mp6/happening.png"
+        elif game_id == "GP7E01":
+            coin_image_path = "assets/mp7/happening.png"
+        elif game_id == "RM8E01":
+            coin_image_path = "assets/mp8/happening.png"
+        try:
+            if os.path.exists(coin_image_path):
+                coin_image = Image.open(coin_image_path)
+                coin_image = coin_image.resize((24, 24), Image.LANCZOS)
+                return ImageTk.PhotoImage(coin_image)
+        except:
+            pass
+        return None
+
+    def load_minigame_image(self, game_id):
+        if game_id == "GMPE01":
+            coin_image_path = "assets/mp4/minigame.png"
+        elif game_id == "GP5E01":
+            coin_image_path = "assets/mp5/minigame.png"
+        elif game_id == "GP6E01":
+            coin_image_path = "assets/mp6/minigame.png"
+        elif game_id == "GP7E01":
+            coin_image_path = "assets/mp7/minigame.png"
+        elif game_id == "RM8E01":
+            coin_image_path = "assets/mp8/minigame.png"
+        try:
+            if os.path.exists(coin_image_path):
+                coin_image = Image.open(coin_image_path)
+                coin_image = coin_image.resize((24, 24), Image.LANCZOS)
+                return ImageTk.PhotoImage(coin_image)
+        except:
+            pass
+        return None
+
+    def load_coin_star_image(self, game_id):
+        if game_id == "GMPE01":
+            coin_image_path = "assets/mp4/coins.png"
+        elif game_id == "GP5E01":
+            coin_image_path = "assets/mp5/coins.png"
+        elif game_id == "GP6E01":
+            coin_image_path = "assets/mp6/item.png"
+        elif game_id == "GP7E01":
+            coin_image_path = "assets/mp7/item.png"
+        elif game_id == "RM8E01":
+            coin_image_path = "assets/mp8/item.png"
+        try:
+            if os.path.exists(coin_image_path):
+                coin_image = Image.open(coin_image_path)
+                coin_image = coin_image.resize((24, 24), Image.LANCZOS)
+                return ImageTk.PhotoImage(coin_image)
+        except:
+            pass
+        return None
+
     def update_coins_and_stars(self):
         game_id = self.check_game_id()
         scene_id = self.get_scene_id(game_id)
@@ -137,10 +216,19 @@ class App(customtkinter.CTk):
                     self.coin_image = self.load_coin_image(game_id)
                 if not self.star_image:
                     self.star_image = self.load_star_image(game_id)
+                if not self.mg_star_image:
+                    self.mg_star_image = self.load_minigame_image(game_id)
+                if not self.coinStar_image:
+                    self.coinStar_image = self.load_coin_star_image(game_id)
+                if not self.happening_image:
+                    self.happening_image = self.load_happening_image(game_id)
 
                 for i in range(4):
                     player_stars = self.get_player_stars(game_id, i)
                     player_coins = self.get_player_coins(game_id, i)
+                    player_mg = self.get_player_mg(game_id, i)
+                    player_coinStar = self.get_player_coinStar(game_id, i)
+                    player_happening = self.get_player_happening(game_id, i)
 
                     # Update coin label
                     self.coin_labels[i].configure(image=self.coin_image, compound='left', pady=10, text=f" {player_coins}")
@@ -150,7 +238,19 @@ class App(customtkinter.CTk):
                     self.star_labels[i].configure(image=self.star_image, compound='left', pady=10, text=f" {player_stars}")
                     self.star_labels[i].image = self.star_image
 
-        self.after(5000, self.update_coins_and_stars)  # Refresh every 5 seconds
+                    # Update MG star label
+                    self.mg_star_labels[i].configure(image=self.mg_star_image, compound='left', pady=10, text=f" {player_mg}")
+                    self.mg_star_labels[i].image = self.star_image
+
+                    # Update Coin star label
+                    self.coin_star_labels[i].configure(image=self.coinStar_image, compound='left', pady=10, text=f" {player_coinStar}")
+                    self.coin_star_labels[i].image = self.coinStar_image
+
+                    # Update Happening star label
+                    self.happening_star_labels[i].configure(image=self.happening_image, compound='left', pady=10, text=f" {player_happening}")
+                    self.happening_star_labels[i].image = self.happening_image
+
+        self.after(20, self.update_coins_and_stars)  # Refresh every 5 seconds
 
     def ensure_config_exists(self):
         """Create a default names.json file if it doesn't exist."""
@@ -261,17 +361,17 @@ class App(customtkinter.CTk):
 
     def get_player_stars(self, game_id, player_index):
         address_map = {
-            "GMPE01": [0x8018FC63, 0x8018FC93, 0x8018FCC3, 0x8018FCF3],
-            "GP5E01": [0x8022A0A5, 0x8022A1AD, 0x8022A2B5, 0x8022A3BD],
-            "GP6E01": [0x80265781, 0x80265889, 0x80265991, 0x80265A99],
-            "GP7E01": [0x80290CD1, 0x80290DE1, 0x80290EF1, 0x80291001],
-            "RM8E01": [0x802283A0, 0x802283AA, 0x802283B4, 0x802283BE]
+            "GMPE01": [0x8018FC62, 0x8018FC92, 0x8018FCC2, 0x8018FCF2],
+            "GP5E01": [0x8022A0A4, 0x8022A1AC, 0x8022A2B4, 0x8022A3BC],
+            "GP6E01": [0x80265780, 0x80265888, 0x80265990, 0x80265A98],
+            "GP7E01": [0x80290CD0, 0x80290DE0, 0x80290EF0, 0x80291000],
+            "RM8E01": [0x80228390, 0x802283A9, 0x802283B3, 0x802283BD]
         }
         
         if game_id in address_map:
             try:
                 address = address_map[game_id][player_index]
-                score_bytes = dolphin_memory_engine.read_bytes(address, 1)
+                score_bytes = dolphin_memory_engine.read_bytes(address, 2)
                 score = int.from_bytes(score_bytes, byteorder='big')
                 return str(score)
             except:
@@ -280,22 +380,81 @@ class App(customtkinter.CTk):
 
     def get_player_coins(self, game_id, player_index):
         address_map = {
-            "GMPE01": [0x8018FC55, 0x8018FC85, 0x8018FCB5, 0x8018FCE5],
-            "GP5E01": [0x8022A091, 0x8022A199, 0x8022A2A1, 0x8022A3A9],
-            "GP6E01": [0x8026576D, 0x80265875, 0x8026597D, 0x80265A85],
-            "GP7E01": [0x80290CBF, 0x80290DCF, 0x80290EDF, 0x80290FEF],
+            "GMPE01": [0x8018FC54, 0x8018FC84, 0x8018FCB4, 0x8018FCE4],
+            "GP5E01": [0x8022A090, 0x8022A198, 0x8022A2A0, 0x8022A3A8],
+            "GP6E01": [0x8026576C, 0x80265874, 0x8026597C, 0x80265A84],
+            "GP7E01": [0x80290CBE, 0x80290DCE, 0x80290EDE, 0x80290FEE],
+            "RM8E01": [0x8022831E, 0x80228436, 0x8022854E, 0x80228666]
+        }
+        
+        if game_id in address_map:
+            try:
+                address = address_map[game_id][player_index]
+                coins_bytes = dolphin_memory_engine.read_bytes(address, 2)
+                coins = int.from_bytes(coins_bytes, byteorder='big')
+                return str(coins)
+            except:
+                return "0"
+        return "0"
+
+    def get_player_mg(self, game_id, player_index):
+        address_map = {
+            "GMPE01": [0x8018FC56, 0x8018FC86, 0x8018FCB6, 0x8018FCE6], # done
+            "GP5E01": [0x8022A092, 0x8022A19A, 0x8022A2A2, 0x8022A3A9],
+            "GP6E01": [0x8026576E, 0x80265876, 0x802659AE, 0x80265A86], # 1 / 3
+            "GP7E01": [0x8050CB5E, 0x8050CB92, 0x8050CBC6, 0x8050CBFA], # done
             "RM8E01": [0x802283A4, 0x802283AE, 0x802283B8, 0x802283C2]
         }
         
         if game_id in address_map:
             try:
                 address = address_map[game_id][player_index]
-                coins_bytes = dolphin_memory_engine.read_bytes(address, 1)
+                coins_bytes = dolphin_memory_engine.read_bytes(address, 2)
                 coins = int.from_bytes(coins_bytes, byteorder='big')
                 return str(coins)
             except:
                 return "0"
         return "0"
+
+
+    def get_player_coinStar(self, game_id, player_index):
+        address_map = {
+            "GMPE01": [0x8018FC5A, 0x8018FC8A, 0x8018FCBA, 0x8018FCEA], # done
+            "GP5E01": [0x8022A096, 0x8022A19E, 0x8022A2A6, 0x8022A3AE],
+            "GP6E01": [0x80265784, 0x8026588C, 0x80265994, 0x80265A9C], # 2 Maybe
+            "GP7E01": [0x8050CB52, 0x8050CB96, 0x8050CBCA, 0x00000000], # done
+            "RM8E01": [0x802283A4, 0x802283AE, 0x802283B8, 0x802283C2]
+        }
+        
+        if game_id in address_map:
+            try:
+                address = address_map[game_id][player_index]
+                coins_bytes = dolphin_memory_engine.read_bytes(address, 2)
+                coins = int.from_bytes(coins_bytes, byteorder='big')
+                return str(coins)
+            except:
+                return "0"
+        return "0"
+
+    def get_player_happening(self, game_id, player_index):
+        address_map = {
+            "GMPE01": [0x8018FC4D, 0x8018FC7D, 0x8018FCAD, 0x8018FCDD], # done
+            "GP5E01": [0x8022A086, 0x8022A18E, 0x8022A296, 0x8022A39E],
+            "GP6E01": [0x80265766, 0x8026586D, 0x80265976, 0x80265A7D],
+            "GP7E01": [0x8050CB63, 0x8050CBA7, 0x8050CBDB, 0x8050CC08], # done
+            "RM8E01": [0x802283A4, 0x802283AE, 0x802283B8, 0x802283C2]
+        }
+        
+        if game_id in address_map:
+            try:
+                address = address_map[game_id][player_index]
+                coins_bytes = dolphin_memory_engine.read_bytes(address, 2)
+                coins = int.from_bytes(coins_bytes, byteorder='big')
+                return str(coins)
+            except:
+                return "0"
+        return "0"
+
 
     def get_final_turn(self, game_id):
         scene_id = self.get_scene_id(game_id)
@@ -349,11 +508,9 @@ class App(customtkinter.CTk):
                 else:
                     self.turn_label.configure(text="Scene not valid")
                     # Hide portraits and names if scene ID is not valid
-                    for img_label, name_label, coin_label, star_label in zip(self.image_labels, self.name_labels, self.coin_labels, self.star_labels):
+                    for img_label, name_label in zip(self.image_labels, self.name_labels):
                         img_label.grid_forget()
                         name_label.grid_forget()
-                        coin_label.grid_forget()
-                        star_label.grid_forget()
 
             if self.initial_load_done:
                 if current_turn == "255" and self.cached_turn != "255":
@@ -377,13 +534,11 @@ class App(customtkinter.CTk):
                     self.update_images(game_id)
 
                     if current_turn == "0":
-                        for img_label, name_label, coin_label, star_label in zip(self.image_labels, self.name_labels, self.coin_labels, self.star_labels):
+                        for img_label, name_label in zip(self.image_labels, self.name_labels):
                             img_label.grid_forget()
                             name_label.grid_forget()
-                            coin_label.grid_forget()
-                            star_label.grid_forget()
                     else:
-                        for i, (img_label, name_label, coin_label, star_label) in enumerate(zip(self.image_labels, self.name_labels, self.coin_labels, self.star_labels)):
+                        for i, (img_label, name_label) in enumerate(zip(self.image_labels, self.name_labels)):
                             img_label.grid(row=1, column=i, padx=10, pady=10, sticky="nsew")
                             name_label.grid(row=2, column=i, padx=10, pady=5, sticky="nsew")
 
@@ -391,48 +546,27 @@ class App(customtkinter.CTk):
                                 name_label.configure(text=f"{self.get_character_name(self.get_character_id(game_id)[i], i)}")
                             except:
                                 pass
-
-                            if not self.coin_image:
-                                self.coin_image = self.load_coin_image(game_id)
-
-                            if not self.star_image:
-                                self.star_image = self.load_star_image(game_id)
-
-                            if current_turn != "0":  # Update coins and stars only if current_turn is not "0"
-                                coin_label.configure(image=self.coin_image, compound='left', pady=10, text=f" {self.get_player_coins(game_id, i)}")
-                                coin_label.image = self.coin_image
-
-                                star_label.configure(image=self.star_image, compound='left', pady=10, text=f" {self.get_player_stars(game_id, i)}")
-                                star_label.image = self.star_image
-                            else:
-                                coin_label.configure(image=None, text="")
-                                star_label.configure(image=None, text="")
+        
 
                 else:
                     self.turn_label.configure(text="Game not detected")
-                    for img_label, name_label, coin_label, star_label in zip(self.image_labels, self.name_labels, self.coin_labels, self.star_labels):
+                    for img_label, name_label in zip(self.image_labels, self.name_labels):
                         img_label.grid_forget()
                         name_label.grid_forget()
-                        coin_label.grid_forget()
-                        star_label.grid_forget()
 
             else:
                 self.turn_label.configure(text="Game not detected")
-                for img_label, name_label, coin_label, star_label in zip(self.image_labels, self.name_labels, self.coin_labels, self.star_labels):
+                for img_label, name_label in zip(self.image_labels, self.name_labels):
                     img_label.grid_forget()
                     name_label.grid_forget()
-                    coin_label.grid_forget()
-                    star_label.grid_forget()
 
         else:
             self.turn_label.configure(text="Game not detected")
-            for img_label, name_label, coin_label, star_label in zip(self.image_labels, self.name_labels, self.coin_labels, self.star_labels):
+            for img_label, name_label in zip(self.image_labels, self.name_labelss):
                 img_label.grid_forget()
                 name_label.grid_forget()
-                coin_label.grid_forget()
-                star_label.grid_forget()
 
-        self.after(500, self.update_turn_label)
+        self.after(20, self.update_turn_label)
 
     def write_turn_to_file(self, current_turn, final_turn):
         with open("data/turn.txt", "w") as f:
