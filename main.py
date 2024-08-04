@@ -20,8 +20,20 @@ class ConfigFileHandler(FileSystemEventHandler):
             self.app.load_name_overrides()
 
 class App(customtkinter.CTk):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.valid_scene_ids = [
+            {"89", "90", "91", "92", "93", "94"},
+            {"118", "120", "122", "124", "126", "128", "130"},
+            {"123", "124", "125", "126", "127", "128"},
+            {"122", "123", "124", "125", "126", "127"},
+            {"16", "17", "18", "19", "20", "21"}
+        ]
+        self.initial_load_done = False
+        self.coin_image = None
+        self.star_image = None
+        self.last_turn_zero_change_time = None
+        self.delay_duration = 3500
 
         try:
             os.mkdir("data")
@@ -48,6 +60,8 @@ class App(customtkinter.CTk):
         # Image labels and character name labels
         self.image_labels = []
         self.name_labels = []
+        self.coin_labels = []
+        self.star_labels = []
         for i in range(4):
             img_label = customtkinter.CTkLabel(self.home_frame, text="", width=150, height=150, corner_radius=8)
             img_label.grid(row=1, column=i, padx=10, pady=5, sticky="nsew")
@@ -57,23 +71,107 @@ class App(customtkinter.CTk):
             name_label.grid(row=2, column=i, padx=10, pady=5, sticky="nsew")
             self.name_labels.append(name_label)
 
+            star_label = customtkinter.CTkLabel(self.home_frame, text="", font=("Helvetica", 26))
+            star_label.grid(row=3, column=i, padx=10, pady=(5, 2), sticky="nsew")
+            self.star_labels.append(star_label)
+
+            coin_label = customtkinter.CTkLabel(self.home_frame, text="", font=("Helvetica", 26))
+            coin_label.grid(row=4, column=i, padx=10, pady=(2, 5), sticky="nsew")
+            self.coin_labels.append(coin_label)
+
         self.cached_turn = None
         self.cached_final_turn = None
 
         self.update_turn_label()
+        self.update_coins_and_stars()
 
         # Start file monitoring
         self.start_file_monitoring()
+
+    def load_coin_image(self, game_id):
+        if game_id == "GMPE01":
+            coin_image_path = "assets/mp4/coins.png"
+        elif game_id == "GP5E01":
+            coin_image_path = "assets/mp5/coins.png"
+        elif game_id == "GP6E01":
+            coin_image_path = "assets/mp6/coins.png"
+        elif game_id == "GP7E01":
+            coin_image_path = "assets/mp7/coins.png"
+        elif game_id == "RM8E01":
+            coin_image_path = "assets/mp8/coins.png"
+        try:
+            if os.path.exists(coin_image_path):
+                coin_image = Image.open(coin_image_path)
+                coin_image = coin_image.resize((24, 24), Image.LANCZOS)
+                return ImageTk.PhotoImage(coin_image)
+        except:
+            pass
+        return None
+
+    def load_star_image(self, game_id):
+        if game_id == "GMPE01":
+            coin_image_path = "assets/mp4/stars.png"
+        elif game_id == "GP5E01":
+            coin_image_path = "assets/mp5/stars.png"
+        elif game_id == "GP6E01":
+            coin_image_path = "assets/mp6/stars.png"
+        elif game_id == "GP7E01":
+            coin_image_path = "assets/mp7/stars.png"
+        elif game_id == "RM8E01":
+            coin_image_path = "assets/mp8/stars.png"
+        try:
+            if os.path.exists(coin_image_path):
+                coin_image = Image.open(coin_image_path)
+                coin_image = coin_image.resize((24, 24), Image.LANCZOS)
+                return ImageTk.PhotoImage(coin_image)
+        except:
+            pass
+        return None
+
+    def update_coins_and_stars(self):
+        game_id = self.check_game_id()
+
+        if game_id:
+            if not self.coin_image:
+                self.coin_image = self.load_coin_image(game_id)
+            if not self.star_image:
+                self.star_image = self.load_star_image(game_id)
+
+            for i in range(4):
+                player_stars = self.get_player_stars(game_id, i)
+                player_coins = self.get_player_coins(game_id, i)
+
+                # Update coin label
+                self.coin_labels[i].configure(image=self.coin_image, compound='left', pady=10, text=f" {player_coins}")
+                self.coin_labels[i].image = self.coin_image
+
+                # Update star label
+                self.star_labels[i].configure(image=self.star_image, compound='left', pady=10, text=f" {player_stars}")
+                self.star_labels[i].image = self.star_image
+
+        self.after(5000, self.update_coins_and_stars)  # Refresh every 5 seconds
 
     def ensure_config_exists(self):
         """Create a default names.json file if it doesn't exist."""
         config_path = "data/names.json"
         if not os.path.exists(config_path):
             default_names = {
-                "Player1": "",
-                "Player2": "",
-                "Player3": "",
-                "Player4": ""
+                "mario": "",
+                "luigi": "",
+                "peach": "",
+                "yoshi": "",
+                "wario": "",
+                "dk": "",
+                "daisy": "",
+                "waluigi": "",
+                "boo": "",
+                "koopakid": "",
+                "toad": "",
+                "toadette": "",
+                "drybones": "",
+                "birdo": "",
+                "blooper": "",
+                "hammerbro": ""
             }
             try:
                 with open(config_path, "w") as file:
@@ -88,10 +186,8 @@ class App(customtkinter.CTk):
                 data = json.load(file)
                 if not isinstance(data, dict):
                     print("names.json is not a valid JSON object.")
-                    return {}
-                for key, name in data.items():
-                    if name:  # Only update if name is not blank
-                        self.name_overrides[key] = name
+                    return
+                self.name_overrides = data  # Directly use the loaded data as overrides
         except FileNotFoundError:
             print("names.json file not found.")
         except json.JSONDecodeError:
@@ -105,10 +201,11 @@ class App(customtkinter.CTk):
         self.protocol("WM_DELETE_WINDOW", self.on_close)
 
     def on_close(self):
-        # Stop the observer when the application closes
-        self.observer.stop()
-        self.observer.join()
-        self.destroy()
+       # Stop the observer if it exists
+       if hasattr(self, 'observer'):
+           self.observer.stop()
+           self.observer.join()
+       self.destroy()
 
     def window_enumeration_handler(self, hwnd, top_windows):
         top_windows.append((hwnd, win32gui.GetWindowText(hwnd)))
@@ -128,6 +225,7 @@ class App(customtkinter.CTk):
     def check_emulator_window(self):
         hwnd, window_text = self.find_window_by_substring("Dolphin MPN")
         if hwnd:
+            os.environ["DME_DOLPHIN_PROCESS_NAME"] = "Dolphin-MPN"
             return "Dolphin"
         hwnd, window_text = self.find_window_by_substring("Dolphin")
         if hwnd:
@@ -156,6 +254,44 @@ class App(customtkinter.CTk):
                 current_turn = dolphin_memory_engine.read_bytes(address_map[game_id][0], 1)
                 current_turn_str = ''.join(f'{byte:02x}' for byte in current_turn).lstrip('0')
                 return str(int(current_turn_str, 16)) or "0"
+            except:
+                return "0"
+        return "0"
+
+    def get_player_stars(self, game_id, player_index):
+        address_map = {
+            "GMPE01": [0x8018FC63, 0x8018FC93, 0x8018FCC3, 0x8018FCF3],
+            "GP5E01": [0x8022A0A5, 0x8022A1AD, 0x8022A2B5, 0x8022A3BD],
+            "GP6E01": [0x80265781, 0x80265889, 0x80265991, 0x80265A99],
+            "GP7E01": [0x80290CD1, 0x80290DE1, 0x80290EF1, 0x80291001],
+            "RM8E01": [0x802283A0, 0x802283AA, 0x802283B4, 0x802283BE]
+        }
+        
+        if game_id in address_map:
+            try:
+                address = address_map[game_id][player_index]
+                score_bytes = dolphin_memory_engine.read_bytes(address, 1)
+                score = int.from_bytes(score_bytes, byteorder='big')
+                return str(score)
+            except:
+                return "0"
+        return "0"
+
+    def get_player_coins(self, game_id, player_index):
+        address_map = {
+            "GMPE01": [0x8018FC55, 0x8018FC85, 0x8018FCB5, 0x8018FCE5],
+            "GP5E01": [0x8022A091, 0x8022A199, 0x8022A2A1, 0x8022A3A9],
+            "GP6E01": [0x8026576D, 0x80265875, 0x8026597D, 0x80265A85],
+            "GP7E01": [0x80290CBF, 0x80290DCF, 0x80290EDF, 0x80290FEF],
+            "RM8E01": [0x802283A4, 0x802283AE, 0x802283B8, 0x802283C2]
+        }
+        
+        if game_id in address_map:
+            try:
+                address = address_map[game_id][player_index]
+                coins_bytes = dolphin_memory_engine.read_bytes(address, 1)
+                coins = int.from_bytes(coins_bytes, byteorder='big')
+                return str(coins)
             except:
                 return "0"
         return "0"
@@ -204,52 +340,96 @@ class App(customtkinter.CTk):
         if game_id:
             current_turn = self.get_current_turn(game_id)
             final_turn = self.get_final_turn(game_id)
+            scene_id = self.get_scene_id(game_id)
 
-            # Handle turn reset to 255
-            if current_turn == "255" and self.cached_turn != "255":
-                current_turn = self.cached_turn
-
-            # Cache previous turn if current turn resets to 0
-            if current_turn == "0" and self.cached_turn != "0":
-                current_turn = self.cached_turn
-
-            # Update cache only if the new value is valid
-            if current_turn != "0":
-                self.cached_turn = current_turn
-
-            # Fallback to cached value if final turn is invalid
-            if final_turn is None:
-                final_turn = self.cached_final_turn
-
-            if current_turn and final_turn:
-                self.cached_final_turn = final_turn
-
-                self.turn_label.configure(text=f"Turn: {current_turn} / {final_turn}")
-                self.write_turn_to_file(current_turn, final_turn)
-                self.update_images(game_id)
-
-                # Show or hide portraits and names based on turn count
-                if current_turn == "0":
-                    for img_label, name_label in zip(self.image_labels, self.name_labels):
+            if not self.initial_load_done:
+                if scene_id in [id for valid_ids in self.valid_scene_ids for id in valid_ids]:
+                    self.initial_load_done = True
+                else:
+                    self.turn_label.configure(text="Scene not valid")
+                    # Hide portraits and names if scene ID is not valid
+                    for img_label, name_label, coin_label, star_label in zip(self.image_labels, self.name_labels, self.coin_labels, self.star_labels):
                         img_label.grid_forget()
                         name_label.grid_forget()
+                        coin_label.grid_forget()
+                        star_label.grid_forget()
+
+            if self.initial_load_done:
+                if current_turn == "255" and self.cached_turn != "255":
+                    current_turn = self.cached_turn
+
+                if current_turn == "0" and self.cached_turn != "0":
+                    self.cached_turn = current_turn
+                    self.last_turn_zero_change_time = self.after(self.delay_duration, self.update_coins_and_stars)
+                
+                if current_turn != "0":
+                    self.cached_turn = current_turn
+
+                if final_turn is None:
+                    final_turn = self.cached_final_turn
+
+                if current_turn and final_turn:
+                    self.cached_final_turn = final_turn
+
+                    self.turn_label.configure(text=f"Turn: {current_turn} / {final_turn}")
+                    self.write_turn_to_file(current_turn, final_turn)
+                    self.update_images(game_id)
+
+                    if current_turn == "0":
+                        for img_label, name_label, coin_label, star_label in zip(self.image_labels, self.name_labels, self.coin_labels, self.star_labels):
+                            img_label.grid_forget()
+                            name_label.grid_forget()
+                            coin_label.grid_forget()
+                            star_label.grid_forget()
+                    else:
+                        for i, (img_label, name_label, coin_label, star_label) in enumerate(zip(self.image_labels, self.name_labels, self.coin_labels, self.star_labels)):
+                            img_label.grid(row=1, column=i, padx=10, pady=10, sticky="nsew")
+                            name_label.grid(row=2, column=i, padx=10, pady=5, sticky="nsew")
+
+                            try:
+                                name_label.configure(text=f"{self.get_character_name(self.get_character_id(game_id)[i], i)}")
+                            except:
+                                pass
+
+                            if not self.coin_image:
+                                self.coin_image = self.load_coin_image(game_id)
+
+                            if not self.star_image:
+                                self.star_image = self.load_star_image(game_id)
+
+                            if current_turn != "0":  # Update coins and stars only if current_turn is not "0"
+                                coin_label.configure(image=self.coin_image, compound='left', pady=10, text=f" {self.get_player_coins(game_id, i)}")
+                                coin_label.image = self.coin_image
+
+                                star_label.configure(image=self.star_image, compound='left', pady=10, text=f" {self.get_player_stars(game_id, i)}")
+                                star_label.image = self.star_image
+                            else:
+                                coin_label.configure(image=None, text="")
+                                star_label.configure(image=None, text="")
+
                 else:
-                    for img_label, name_label in zip(self.image_labels, self.name_labels):
-                        img_label.grid(row=1, column=self.image_labels.index(img_label), padx=10, pady=10, sticky="nsew")
-                        name_label.grid(row=2, column=self.name_labels.index(name_label), padx=10, pady=5, sticky="nsew")
+                    self.turn_label.configure(text="Game not detected")
+                    for img_label, name_label, coin_label, star_label in zip(self.image_labels, self.name_labels, self.coin_labels, self.star_labels):
+                        img_label.grid_forget()
+                        name_label.grid_forget()
+                        coin_label.grid_forget()
+                        star_label.grid_forget()
+
             else:
                 self.turn_label.configure(text="Game not detected")
-                # Hide portraits and names if no game is detected
-                for img_label, name_label in zip(self.image_labels, self.name_labels):
+                for img_label, name_label, coin_label, star_label in zip(self.image_labels, self.name_labels, self.coin_labels, self.star_labels):
                     img_label.grid_forget()
                     name_label.grid_forget()
+                    coin_label.grid_forget()
+                    star_label.grid_forget()
 
         else:
             self.turn_label.configure(text="Game not detected")
-            # Hide portraits and names if no game is detected
-            for img_label, name_label in zip(self.image_labels, self.name_labels):
+            for img_label, name_label, coin_label, star_label in zip(self.image_labels, self.name_labels, self.coin_labels, self.star_labels):
                 img_label.grid_forget()
                 name_label.grid_forget()
+                coin_label.grid_forget()
+                star_label.grid_forget()
 
         self.after(500, self.update_turn_label)
 
@@ -275,27 +455,30 @@ class App(customtkinter.CTk):
 
         for i, img_label in enumerate(self.image_labels):
             # Check if index is within bounds
-            if i < len(image_paths):
-                image_path = image_paths[i]
+            try:
+                if i < len(image_paths):
+                    image_path = image_paths[i]
 
-                # Load and display image
-                if image_path and os.path.exists(image_path):
-                    image = Image.open(image_path)
-                    image = image.resize((150, 150), Image.LANCZOS)
-                    photo = ImageTk.PhotoImage(image)
-                    img_label.configure(image=photo)
-                    img_label.image = photo  # Keep a reference to avoid garbage collection
+                    # Load and display image
+                    if image_path and os.path.exists(image_path):
+                        image = Image.open(image_path)
+                        image = image.resize((150, 150), Image.LANCZOS)
+                        photo = ImageTk.PhotoImage(image)
+                        img_label.configure(image=photo)
+                        img_label.image = photo  # Keep a reference to avoid garbage collection
+                    else:
+                        img_label.configure(image=None)
+
+                    # Update character name
+                    if i < len(self.name_labels):
+                        character_name = self.get_character_name(character_ids[i], i)
+                        self.name_labels[i].configure(text=character_name)
                 else:
                     img_label.configure(image=None)
-
-                # Update character name
-                if i < len(self.name_labels):
-                    character_name = self.get_character_name(character_ids[i], i)
-                    self.name_labels[i].configure(text=character_name)
-            else:
-                img_label.configure(image=None)
-                if i < len(self.name_labels):
-                    self.name_labels[i].configure(text="")
+                    if i < len(self.name_labels):
+                        self.name_labels[i].configure(text="")
+            except:
+                pass
 
     def get_character_name(self, character_id, player_index):
         character_map = {
@@ -316,13 +499,15 @@ class App(customtkinter.CTk):
             "blooper": "Blooper",
             "hammerbro": "Hammer Bro"
         }
-        
+
         # Get the default name
         default_name = character_map.get(character_id, "Unknown")
-        
-        # Check if there is an override for this player
-        player_key = f"Player{player_index + 1}"
-        return self.name_overrides.get(player_key, default_name).capitalize()
+
+        # Check if there is an override for this character ID
+        override_name = self.name_overrides.get(character_id, "").strip()
+
+        # Use the override name if it's not empty; otherwise, use the default name
+        return override_name if override_name else default_name
 
     def get_character_id(self, game_id):
         address_map = {
