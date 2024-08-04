@@ -399,10 +399,10 @@ class App(customtkinter.CTk):
 
     def get_player_mg(self, game_id, player_index):
         address_map = {
-            "GMPE01": [0x8018FC56, 0x8018FC86, 0x8018FCB6, 0x8018FCE6], # done
-            "GP5E01": [0x8022A092, 0x8022A19A, 0x8022A2A2, 0x8022A3A9],
-            "GP6E01": [0x8026576E, 0x80265876, 0x802659AE, 0x80265A86], # 1 / 3
-            "GP7E01": [0x8050CB5E, 0x8050CB92, 0x8050CBC6, 0x8050CBFA], # done
+            "GMPE01": [0x8018FC56, 0x8018FC86, 0x8018FCB6, 0x8018FCE6],
+            "GP5E01": [0x8022A092, 0x8022A19A, 0x8022A2A2,  ],
+            "GP6E01": [0x8026576E, 0x80265876, 0x802659AE, 0x80265A86],
+            "GP7E01": [0x80290CC0, 0x80290DD0, 0x80290EE0, 0x80290FF0],
             "RM8E01": [0x802283A4, 0x802283AE, 0x802283B8, 0x802283C2]
         }
         
@@ -419,10 +419,10 @@ class App(customtkinter.CTk):
 
     def get_player_coinStar(self, game_id, player_index):
         address_map = {
-            "GMPE01": [0x8018FC5A, 0x8018FC8A, 0x8018FCBA, 0x8018FCEA], # done
+            "GMPE01": [0x8018FC5A, 0x8018FC8A, 0x8018FCBA, 0x8018FCEA],
             "GP5E01": [0x8022A096, 0x8022A19E, 0x8022A2A6, 0x8022A3AE],
-            "GP6E01": [0x80265784, 0x8026588C, 0x80265994, 0x80265A9C], # 2 Maybe
-            "GP7E01": [0x8050CB52, 0x8050CB96, 0x8050CBCA, 0x00000000], # done
+            "GP6E01": [0x80265784, 0x8026588C, 0x80265994, 0x80265A9C],
+            "GP7E01": [0x80290CD4, 0x80290DE4, 0x80290EF4, 0x80291004],
             "RM8E01": [0x802283A4, 0x802283AE, 0x802283B8, 0x802283C2]
         }
         
@@ -438,10 +438,10 @@ class App(customtkinter.CTk):
 
     def get_player_happening(self, game_id, player_index):
         address_map = {
-            "GMPE01": [0x8018FC4D, 0x8018FC7D, 0x8018FCAD, 0x8018FCDD], # done
-            "GP5E01": [0x8022A086, 0x8022A18E, 0x8022A296, 0x8022A39E],
+            "GMPE01": [0x8018FC4D, 0x8018FC7D, 0x8018FCAD, 0x8018FCDD],
+            "GP5E01": [0x8022A086, 0x8022A18E, 0x8022A296, 0x8022A39E], 
             "GP6E01": [0x80265766, 0x8026586D, 0x80265976, 0x80265A7D],
-            "GP7E01": [0x8050CB63, 0x8050CBA7, 0x8050CBDB, 0x8050CC08], # done
+            "GP7E01": [0x80290CB6, 0x80290DC6, 0x80290ED6, 0x80290FE6],
             "RM8E01": [0x802283A4, 0x802283AE, 0x802283B8, 0x802283C2]
         }
         
