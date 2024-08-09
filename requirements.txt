@@ -3,4 +3,4 @@ tk
 Pillow
 pyinstaller == 5.13.2
 watchdog
-dolphin-memory-engine
+git+https://github.com/EndangeredNayla/py-dolphin-memory-engine.git
