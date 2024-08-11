@@ -15,13 +15,16 @@ class ConfigFileHandler(FileSystemEventHandler):
         self.app = app
 
     def on_modified(self, event):
-        if event.src_path.endswith("names.json"):
-            print("names.json has been updated. Reloading...")
+        if event.src_path.endswith("config.json"):
+            print("config.json has been updated. Reloading...")
             self.app.load_name_overrides()
 
 class App(customtkinter.CTk):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+        self.load_name_overrides()
+
         self.valid_scene_ids = [
             {"89", "90", "91", "92", "93", "94"},
             {"118", "120", "122", "124", "126", "128", "130"},
@@ -48,13 +51,15 @@ class App(customtkinter.CTk):
             pass
 
         self.title("Mario Party Scanner")
-        self.geometry("770x800")
+ 
 
         self.ensure_config_exists()
         self.load_name_overrides()
         customtkinter.set_appearance_mode("Dark")
 
-        self.home_frame = customtkinter.CTkFrame(self, corner_radius=12, fg_color=("gray75", "gray25"), width=1310, height=780)
+        self.geometry(f"{self.window_width - 30}x{self.window_height + 75}")
+
+        self.home_frame = customtkinter.CTkFrame(self, corner_radius=12, fg_color=(self.bg_color, self.bg_color), width=self.window_width / 2, height=self.window_height / 2)
         self.home_frame.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
 
         self.turn_label = customtkinter.CTkLabel(self.home_frame, text="", font=("Helvetica", 32, "bold"))
@@ -77,7 +82,8 @@ class App(customtkinter.CTk):
         self.shopping_star_labels = []
 
         for i in range(4):
-            img_label = customtkinter.CTkLabel(self.home_frame, text="", width=150, height=150, corner_radius=8)
+            self.load_name_overrides()
+            img_label = customtkinter.CTkLabel(self.home_frame, text="", width=150, height=self.player_icon_size + 5, corner_radius=8)
             img_label.grid(row=1, column=i, padx=10, pady=5, sticky="nsew")
             self.image_labels.append(img_label)
 
@@ -85,35 +91,35 @@ class App(customtkinter.CTk):
             name_label.grid(row=2, column=i, padx=10, pady=5, sticky="nsew")
             self.name_labels.append(name_label)
 
-            star_label = customtkinter.CTkLabel(self.home_frame, text="", font=("Helvetica", 26))
+            star_label = customtkinter.CTkLabel(self.home_frame, text="", font=("Helvetica", self.stats_label_size))
             star_label.grid(row=3, column=i, padx=10, pady=(5, 2), sticky="nsew")
             self.star_labels.append(star_label)
 
-            coin_label = customtkinter.CTkLabel(self.home_frame, text="", font=("Helvetica", 26))
+            coin_label = customtkinter.CTkLabel(self.home_frame, text="", font=("Helvetica", self.stats_label_size))
             coin_label.grid(row=4, column=i, padx=10, pady=(2, 5), sticky="nsew")
             self.coin_labels.append(coin_label)
 
-            coin_star_label = customtkinter.CTkLabel(self.home_frame, text="", font=("Helvetica", 26))
+            coin_star_label = customtkinter.CTkLabel(self.home_frame, text="", font=("Helvetica", self.stats_label_size))
             coin_star_label.grid(row=6, column=i, padx=10, pady=(2, 5), sticky="nsew")
             self.coin_star_labels.append(coin_star_label)
 
-            mg_star_label = customtkinter.CTkLabel(self.home_frame, text="", font=("Helvetica", 26))
+            mg_star_label = customtkinter.CTkLabel(self.home_frame, text="", font=("Helvetica", self.stats_label_size))
             mg_star_label.grid(row=5, column=i, padx=10, pady=(5, 2), sticky="nsew")
             self.mg_star_labels.append(mg_star_label)
 
-            happening_star_label = customtkinter.CTkLabel(self.home_frame, text="", font=("Helvetica", 26))
+            happening_star_label = customtkinter.CTkLabel(self.home_frame, text="", font=("Helvetica", self.stats_label_size)) 
             happening_star_label.grid(row=7, column=i, padx=10, pady=(2, 5), sticky="nsew")
             self.happening_star_labels.append(happening_star_label)
 
-            running_star_label = customtkinter.CTkLabel(self.home_frame, text="", font=("Helvetica", 26))
+            running_star_label = customtkinter.CTkLabel(self.home_frame, text="", font=("Helvetica", self.stats_label_size))
             running_star_label.grid(row=8, column=i, padx=10, pady=(2, 5), sticky="nsew")
             self.running_star_labels.append(running_star_label)
 
-            red_star_label = customtkinter.CTkLabel(self.home_frame, text="", font=("Helvetica", 26))
+            red_star_label = customtkinter.CTkLabel(self.home_frame, text="", font=("Helvetica", self.stats_label_size))
             red_star_label.grid(row=9, column=i, padx=10, pady=(2, 5), sticky="nsew")
             self.red_star_labels.append(red_star_label)
 
-            shopping_star_label = customtkinter.CTkLabel(self.home_frame, text="", font=("Helvetica", 26))
+            shopping_star_label = customtkinter.CTkLabel(self.home_frame, text="", font=("Helvetica", self.stats_label_size))
             shopping_star_label.grid(row=10, column=i, padx=10, pady=(2, 5), sticky="nsew")
             self.shopping_star_labels.append(shopping_star_label)
 
@@ -140,7 +146,7 @@ class App(customtkinter.CTk):
         try:
             if os.path.exists(coin_image_path):
                 coin_image = Image.open(coin_image_path)
-                coin_image = coin_image.resize((24, 24), Image.LANCZOS)
+                coin_image = coin_image.resize((self.stats_label_size + 2, self.stats_label_size + 2), Image.LANCZOS)
                 return ImageTk.PhotoImage(coin_image)
         except:
             pass
@@ -160,7 +166,7 @@ class App(customtkinter.CTk):
         try:
             if os.path.exists(coin_image_path):
                 coin_image = Image.open(coin_image_path)
-                coin_image = coin_image.resize((24, 24), Image.LANCZOS)
+                coin_image = coin_image.resize((self.stats_label_size + 2, self.stats_label_size + 2), Image.LANCZOS)
                 return ImageTk.PhotoImage(coin_image)
         except:
             pass
@@ -180,7 +186,7 @@ class App(customtkinter.CTk):
         try:
             if os.path.exists(coin_image_path):
                 coin_image = Image.open(coin_image_path)
-                coin_image = coin_image.resize((24, 24), Image.LANCZOS)
+                coin_image = coin_image.resize((self.stats_label_size + 2, self.stats_label_size + 2), Image.LANCZOS)
                 return ImageTk.PhotoImage(coin_image)
         except:
             pass
@@ -200,7 +206,7 @@ class App(customtkinter.CTk):
         try:
             if os.path.exists(coin_image_path):
                 coin_image = Image.open(coin_image_path)
-                coin_image = coin_image.resize((24, 24), Image.LANCZOS)
+                coin_image = coin_image.resize((self.stats_label_size + 2, self.stats_label_size + 2), Image.LANCZOS)
                 return ImageTk.PhotoImage(coin_image)
         except:
             pass
@@ -220,7 +226,7 @@ class App(customtkinter.CTk):
         try:
             if os.path.exists(coin_image_path):
                 coin_image = Image.open(coin_image_path)
-                coin_image = coin_image.resize((24, 24), Image.LANCZOS)
+                coin_image = coin_image.resize((self.stats_label_size + 2, self.stats_label_size + 2), Image.LANCZOS)
                 return ImageTk.PhotoImage(coin_image)
         except:
             pass
@@ -234,7 +240,7 @@ class App(customtkinter.CTk):
         try:
             if os.path.exists(coin_image_path):
                 coin_image = Image.open(coin_image_path)
-                coin_image = coin_image.resize((24, 24), Image.LANCZOS)
+                coin_image = coin_image.resize((self.stats_label_size + 2, self.stats_label_size + 2), Image.LANCZOS)
                 return ImageTk.PhotoImage(coin_image)
         except:
             pass
@@ -248,7 +254,7 @@ class App(customtkinter.CTk):
         try:
             if os.path.exists(coin_image_path):
                 coin_image = Image.open(coin_image_path)
-                coin_image = coin_image.resize((24, 24), Image.LANCZOS)
+                coin_image = coin_image.resize((self.stats_label_size + 2, self.stats_label_size + 2), Image.LANCZOS)
                 return ImageTk.PhotoImage(coin_image)
         except:
             pass
@@ -262,7 +268,7 @@ class App(customtkinter.CTk):
         try:
             if os.path.exists(coin_image_path):
                 coin_image = Image.open(coin_image_path)
-                coin_image = coin_image.resize((24, 24), Image.LANCZOS)
+                coin_image = coin_image.resize((self.stats_label_size + 2, self.stats_label_size + 2), Image.LANCZOS)
                 return ImageTk.PhotoImage(coin_image)
         except:
             pass
@@ -341,51 +347,68 @@ class App(customtkinter.CTk):
         self.after(20, self.update_coins_and_stars)  # Refresh every 5 seconds
 
     def ensure_config_exists(self):
-        """Create a default names.json file if it doesn't exist."""
-        config_path = "data/names.json"
+        """Create a default config.json file if it doesn't exist."""
+        config_path = "config.json"
         if not os.path.exists(config_path):
-            default_names = {
-                "mario": "",
-                "luigi": "",
-                "peach": "",
-                "yoshi": "",
-                "wario": "",
-                "dk": "",
-                "daisy": "",
-                "waluigi": "",
-                "boo": "",
-                "koopakid": "",
-                "toad": "",
-                "toadette": "",
-                "drybones": "",
-                "birdo": "",
-                "blooper": "",
-                "hammerbro": ""
+            default_config = {
+                "names": {
+                    "mario": "",
+                    "luigi": "",
+                    "peach": "",
+                    "yoshi": "",
+                    "wario": "",
+                    "dk": "",
+                    "daisy": "",
+                    "waluigi": "",
+                    "boo": "",
+                    "koopakid": "",
+                    "toad": "",
+                    "toadette": "",
+                    "drybones": "",
+                    "birdo": "",
+                    "blooper": "",
+                    "hammerbro": ""
+                },
+                "playerIconSize": 150,
+                "statsLabelSize": 26,
+                "bgColor": "#323232",
+                "windowSize": {
+                    "width": 800,
+                    "height": 600
+                }
             }
             try:
                 with open(config_path, "w") as file:
-                    json.dump(default_names, file, indent=4)
+                    json.dump(default_config, file, indent=4)
             except Exception as e:
-                print(f"Error creating names.json: {e}")
+                print(f"Error creating config.json: {e}")
 
     def load_name_overrides(self):
         self.name_overrides = {}
         try:
-            with open("data/names.json", "r") as file:
+            with open("config.json", "r") as file:
                 data = json.load(file)
-                if not isinstance(data, dict):
-                    print("names.json is not a valid JSON object.")
+                if not isinstance(data, dict) or "names" not in data:
+                    print("config.json is not a valid JSON object or missing 'names' key.")
                     return
-                self.name_overrides = data  # Directly use the loaded data as overrides
+                self.name_overrides = data["names"]
+                self.player_icon_size = int(data["playerIconSize"])
+                self.stats_label_size = int(data["statsLabelSize"])
+                self.bg_color = data["bgColor"]
+                window_size = data["windowSize"]
+                self.window_width = window_size["width"]
+                self.window_height = window_size["height"]
         except FileNotFoundError:
-            print("names.json file not found.")
+            print("config.json file not found.")
         except json.JSONDecodeError:
-            print("Error decoding names.json.")
+            print("Error decoding config.json.")
+        except KeyError as e:
+            print(f"Missing key in config.json: {e}")
 
     def start_file_monitoring(self):
         event_handler = ConfigFileHandler(self)
         observer = Observer()
-        observer.schedule(event_handler, path=os.path.dirname(os.path.abspath("data/names.json")), recursive=False)
+        observer.schedule(event_handler, path=os.path.dirname(os.path.abspath("config.json")), recursive=False)
         observer.start()
         self.protocol("WM_DELETE_WINDOW", self.on_close)
 
@@ -668,7 +691,7 @@ class App(customtkinter.CTk):
                             name_label.grid_forget()
                     else:
                         for i, (img_label, name_label) in enumerate(zip(self.image_labels, self.name_labels)):
-                            img_label.grid(row=1, column=i, padx=10, pady=10, sticky="nsew")
+                            img_label.grid(row=1, column=i, padx=10, pady=1, sticky="nsew")
                             name_label.grid(row=2, column=i, padx=10, pady=5, sticky="nsew")
 
                             try:
@@ -726,7 +749,7 @@ class App(customtkinter.CTk):
                     # Load and display image
                     if image_path and os.path.exists(image_path):
                         image = Image.open(image_path)
-                        image = image.resize((150, 150), Image.LANCZOS)
+                        image = image.resize((self.player_icon_size, self.player_icon_size), Image.LANCZOS)
                         photo = ImageTk.PhotoImage(image)
                         img_label.configure(image=photo)
                         img_label.image = photo  # Keep a reference to avoid garbage collection
