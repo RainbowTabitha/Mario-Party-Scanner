@@ -3,6 +3,6 @@ tk
 Pillow
 pyinstaller == 5.13.2
 watchdog
-win32gui
+pywin32
 pygetwindow
 git+https://github.com/EndangeredNayla/py-dolphin-memory-engine.git
