@@ -128,15 +128,15 @@ class App(customtkinter.CTk):
 
     def load_coin_image(self, game_id):
         if game_id == "GMPE01":
-            coin_image_path = "assets/mp4/coins.png"
+            coin_image_path = functions.resource_path("assets/mp4/coins.png")
         elif game_id == "GP5E01":
-            coin_image_path = "assets/mp5/coins.png"
+            coin_image_path = functions.resource_path("assets/mp5/coins.png")
         elif game_id == "GP6E01":
-            coin_image_path = "assets/mp6/coins.png"
+            coin_image_path = functions.resource_path("assets/mp6/coins.png")
         elif game_id == "GP7E01":
-            coin_image_path = "assets/mp7/coins.png"
+            coin_image_path = functions.resource_path("assets/mp7/coins.png")
         elif game_id == "RM8E01":
-            coin_image_path = "assets/mp8/coins.png"
+            coin_image_path = functions.resource_path("assets/mp8/coins.png")
         try:
             if os.path.exists(coin_image_path):
                 coin_image = Image.open(coin_image_path)
@@ -148,15 +148,15 @@ class App(customtkinter.CTk):
 
     def load_star_image(self, game_id):
         if game_id == "GMPE01":
-            coin_image_path = "assets/mp4/stars.png"
+            coin_image_path = functions.resource_path("assets/mp4/stars.png")
         elif game_id == "GP5E01":
-            coin_image_path = "assets/mp5/stars.png"
+            coin_image_path = functions.resource_path("assets/mp5/stars.png")
         elif game_id == "GP6E01":
-            coin_image_path = "assets/mp6/stars.png"
+            coin_image_path = functions.resource_path("assets/mp6/stars.png")
         elif game_id == "GP7E01":
-            coin_image_path = "assets/mp7/stars.png"
+            coin_image_path = functions.resource_path("assets/mp7/stars.png")
         elif game_id == "RM8E01":
-            coin_image_path = "assets/mp8/stars.png"
+            coin_image_path = functions.resource_path("assets/mp8/stars.png")
         try:
             if os.path.exists(coin_image_path):
                 coin_image = Image.open(coin_image_path)
@@ -168,15 +168,15 @@ class App(customtkinter.CTk):
 
     def load_happening_image(self, game_id):
         if game_id == "GMPE01":
-            coin_image_path = "assets/mp4/happening.png"
+            coin_image_path = functions.resource_path("assets/mp4/happening.png")
         elif game_id == "GP5E01":
-            coin_image_path = "assets/mp5/happening.png"
+            coin_image_path = functions.resource_path("assets/mp5/happening.png")
         elif game_id == "GP6E01":
-            coin_image_path = "assets/mp6/happening.png"
+            coin_image_path = functions.resource_path("assets/mp6/happening.png")
         elif game_id == "GP7E01":
-            coin_image_path = "assets/mp7/happening.png"
+            coin_image_path = functions.resource_path("assets/mp7/happening.png")
         elif game_id == "RM8E01":
-            coin_image_path = "assets/mp8/happening.png"
+            coin_image_path = functions.resource_path("assets/mp8/happening.png")
         try:
             if os.path.exists(coin_image_path):
                 coin_image = Image.open(coin_image_path)
@@ -188,15 +188,15 @@ class App(customtkinter.CTk):
 
     def load_minigame_image(self, game_id):
         if game_id == "GMPE01":
-            coin_image_path = "assets/mp4/minigame.png"
+            coin_image_path = functions.resource_path("assets/mp4/minigame.png")
         elif game_id == "GP5E01":
-            coin_image_path = "assets/mp5/minigame.png"
+            coin_image_path = functions.resource_path("assets/mp5/minigame.png")
         elif game_id == "GP6E01":
-            coin_image_path = "assets/mp6/minigame.png"
+            coin_image_path = functions.resource_path("assets/mp6/minigame.png")
         elif game_id == "GP7E01":
-            coin_image_path = "assets/mp7/minigame.png"
+            coin_image_path = functions.resource_path("assets/mp7/minigame.png")
         elif game_id == "RM8E01":
-            coin_image_path = "assets/mp8/minigame.png"
+            coin_image_path = functions.resource_path("assets/mp8/minigame.png")
         try:
             if os.path.exists(coin_image_path):
                 coin_image = Image.open(coin_image_path)
@@ -208,15 +208,15 @@ class App(customtkinter.CTk):
 
     def load_coin_star_image(self, game_id):
         if game_id == "GMPE01":
-            coin_image_path = "assets/mp4/coins.png"
+            coin_image_path = functions.resource_path("assets/mp4/coins.png")
         elif game_id == "GP5E01":
-            coin_image_path = "assets/mp5/coins.png"
+            coin_image_path = functions.resource_path("assets/mp5/coins.png")
         elif game_id == "GP6E01":
-            coin_image_path = "assets/mp6/item.png"
+            coin_image_path = functions.resource_path("assets/mp6/item.png")
         elif game_id == "GP7E01":
-            coin_image_path = "assets/mp7/item.png"
+            coin_image_path = functions.resource_path("assets/mp7/item.png")
         elif game_id == "RM8E01":
-            coin_image_path = "assets/mp8/item.png"
+            coin_image_path = functions.resource_path("assets/mp8/item.png")
         try:
             if os.path.exists(coin_image_path):
                 coin_image = Image.open(coin_image_path)
@@ -228,9 +228,9 @@ class App(customtkinter.CTk):
 
     def load_running_star_image(self, game_id):
         if game_id == "GP7E01":
-            coin_image_path = "assets/mp7/running.png"
+            coin_image_path = functions.resource_path("assets/mp7/running.png")
         elif game_id == "RM8E01":
-            coin_image_path = "assets/mp8/running.png"
+            coin_image_path = functions.resource_path("assets/mp8/running.png")
         try:
             if os.path.exists(coin_image_path):
                 coin_image = Image.open(coin_image_path)
@@ -242,9 +242,9 @@ class App(customtkinter.CTk):
 
     def load_red_star_image(self, game_id):
         if game_id == "GP7E01":
-            coin_image_path = "assets/mp7/redspace.png"
+            coin_image_path = functions.resource_path("assets/mp7/redspace.png")
         elif game_id == "RM8E01":
-            coin_image_path = "assets/mp8/redspace.png"
+            coin_image_path = functions.resource_path("assets/mp8/redspace.png")
         try:
             if os.path.exists(coin_image_path):
                 coin_image = Image.open(coin_image_path)
@@ -256,9 +256,9 @@ class App(customtkinter.CTk):
 
     def load_shopping_star_image(self, game_id):
         if game_id == "GP7E01":
-            coin_image_path = "assets/mp7/shopping.png"
+            coin_image_path = functions.resource_path("assets/mp7/shopping.png")
         elif game_id == "RM8E01":
-            coin_image_path = "assets/mp8/shopping.png"
+            coin_image_path = functions.resource_path("assets/mp8/shopping.png")
         try:
             if os.path.exists(coin_image_path):
                 coin_image = Image.open(coin_image_path)
@@ -488,7 +488,7 @@ class App(customtkinter.CTk):
     def get_player_mg(self, game_id, player_index):
         address_map = {
             "GMPE01": [0x8018FC56, 0x8018FC86, 0x8018FCB6, 0x8018FCE6],
-            "GP5E01": [0x8022A092, 0x8022A19A, 0x8022A2A2, 0x8022A3A9],
+            "GP5E01": [0x8022A092, 0x8022A19A, 0x8022A2A2, 0x8022A3AA],
             "GP6E01": [0x8026576E, 0x80265876, 0x802659AE, 0x80265A86],
             "GP7E01": [0x80290CC0, 0x80290DD0, 0x80290EE0, 0x80290FF0]
         }
