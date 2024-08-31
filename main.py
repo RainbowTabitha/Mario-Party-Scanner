@@ -512,7 +512,7 @@ class App(customtkinter.CTk):
         address_map = {
             "GMPE01": [0x8018FC56, 0x8018FC86, 0x8018FCB6, 0x8018FCE6],
             "GP5E01": [0x8022A092, 0x8022A19A, 0x8022A2A2, 0x8022A3AA],
-            "GP6E01": [0x8026576E, 0x80265876, 0x802659AE, 0x80265A86],
+            "GP6E01": [0x8026576E, 0x80265876, 0x8026597E, 0x80265A86],
             "GP7E01": [0x80290CC0, 0x80290DD0, 0x80290EE0, 0x80290FF0]
         }
         
