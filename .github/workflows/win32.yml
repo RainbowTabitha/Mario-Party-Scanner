@@ -19,7 +19,7 @@ jobs:
       run: pyinstaller --add-data "assets/mp4/*;assets/mp4/" --add-data "assets/mp5/*;assets/mp5/" --add-data "assets/mp6/*;assets/mp6/" --add-data "assets/mp7/*;assets/mp7/" --add-data "assets/mp8/*;assets/mp8/" --onefile .\main.py --name="Mario Party Scanner" -w
 
     - name: Upload Artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: MarioPartyScanner-win32
         path: D:\a\Mario-Party-Scanner\Mario-Party-Scanner\dist
