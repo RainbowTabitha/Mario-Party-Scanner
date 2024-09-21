@@ -62,7 +62,7 @@ class App(customtkinter.CTk):
         self.home_frame = customtkinter.CTkFrame(self, corner_radius=12, fg_color=(self.bg_color, self.bg_color), width=self.window_width / 2, height=self.window_height / 2)
         self.home_frame.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
 
-        self.turn_label = customtkinter.CTkLabel(self.home_frame, text="", font=("Helvetica", 32, "bold"))
+        self.turn_label = customtkinter.CTkLabel(self.home_frame, text="", font=("Helvetica", self.turn_label_size, "bold"))
         self.turn_label.grid(row=0, column=0, padx=10, pady=10, sticky="n")
 
         # Configure grid columns to be evenly spaced
@@ -371,6 +371,7 @@ class App(customtkinter.CTk):
                 },
                 "playerIconSize": 150,
                 "statsLabelSize": 26,
+                "turnLabelSize": 32,
                 "bgColor": "#323232",
                 "windowSize": {
                     "width": 800,
@@ -394,6 +395,7 @@ class App(customtkinter.CTk):
                 self.name_overrides = data["names"]
                 self.player_icon_size = int(data["playerIconSize"])
                 self.stats_label_size = int(data["statsLabelSize"])
+                self.turn_label_size = int(data["turnLabelSize"])
                 self.bg_color = data["bgColor"]
                 window_size = data["windowSize"]
                 self.window_width = window_size["width"]
