@@ -4,5 +4,5 @@ Pillow
 pyinstaller == 5.13.2
 watchdog
 pywin32
-pygetwindow
+pygetwindow; sys_platform == 'win32'
 git+https://github.com/EndangeredNayla/py-dolphin-memory-engine.git

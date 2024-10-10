@@ -1,9 +1,9 @@
 import customtkinter
 import os
+import sys
 from PIL import Image, ImageTk
 import tkinter as tk
 import win32gui
-import pygetwindow as gw
 import json
 import functions
 import dolphin_memory_engine
@@ -424,10 +424,6 @@ class App(customtkinter.CTk):
     def window_enumeration_handler(self, hwnd, top_windows):
         top_windows.append((hwnd, win32gui.GetWindowText(hwnd)))
 
-    def is_dolphin_netplay_running(self):
-        windows = gw.getWindowsWithTitle('NetPlay')  # Adjust the title if needed
-        return windows[0] if windows else None
-
     def find_window_by_substring(self, substring):
         top_windows = []
         win32gui.EnumWindows(self.window_enumeration_handler, top_windows)
@@ -534,7 +530,7 @@ class App(customtkinter.CTk):
             "GMPE01": [0x8018FC5A, 0x8018FC8A, 0x8018FCBA, 0x8018FCEA],
             "GP5E01": [0x8022A096, 0x8022A19E, 0x8022A2A6, 0x8022A3AE],
             "GP6E01": [0x80265784, 0x8026588C, 0x80265994, 0x80265A9C],
-            "GP7E01": [0x80290CD4, 0x80290DE4, 0x80290EF4, 0x80290F04]
+            "GP7E01": [0x80290CD4, 0x80290DE4, 0x80290EF4, 0x80291004]
         }
         
         if game_id in address_map:
