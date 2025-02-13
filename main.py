@@ -805,6 +805,7 @@ class App(customtkinter.CTk):
     def get_character_id(self, game_id):
         address_map = {
             "GMPE01": [0x8018FC11, 0x8018FC1B, 0x8018FC25, 0x8018FC2F],
+            "GMPEDX": [0x8018FC11, 0x8018FC1B, 0x8018FC25, 0x8018FC2F],
             "GP5E01": [0x8022A049, 0x8022A053, 0x8022A05D, 0x8022A067],
             "GP6E01": [0x80265729, 0x80265733, 0x8026573D, 0x80265747],
             "GP7E01": [0x80290C49, 0x80290C53, 0x80290C5D, 0x80290C67],
