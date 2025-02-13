@@ -4,7 +4,7 @@ import sys
 from PIL import Image, ImageTk
 import tkinter as tk
 import win32gui
-import jsonMP
+import json
 import functions
 import dolphin_memory_engine
 from watchdog.observers import Observer
