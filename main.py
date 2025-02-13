@@ -4,7 +4,7 @@ import sys
 from PIL import Image, ImageTk
 import tkinter as tk
 import win32gui
-import json
+import jsonMP
 import functions
 import dolphin_memory_engine
 from watchdog.observers import Observer
@@ -133,7 +133,7 @@ class App(customtkinter.CTk):
         self.start_file_monitoring()
 
     def load_coin_image(self, game_id):
-        if game_id == "GMPE01":
+        if game_id == "GMPE01" or game_id == "GMPEDX":
             coin_image_path = functions.resource_path("assets/mp4/coins.png")
         elif game_id == "GP5E01":
             coin_image_path = functions.resource_path("assets/mp5/coins.png")
@@ -153,7 +153,7 @@ class App(customtkinter.CTk):
         return None
 
     def load_star_image(self, game_id):
-        if game_id == "GMPE01":
+        if game_id == "GMPE01" or game_id == "GMPEDX":
             coin_image_path = functions.resource_path("assets/mp4/stars.png")
         elif game_id == "GP5E01":
             coin_image_path = functions.resource_path("assets/mp5/stars.png")
@@ -173,7 +173,7 @@ class App(customtkinter.CTk):
         return None
 
     def load_happening_image(self, game_id):
-        if game_id == "GMPE01":
+        if game_id == "GMPE01" or game_id == "GMPEDX":
             coin_image_path = functions.resource_path("assets/mp4/happening.png")
         elif game_id == "GP5E01":
             coin_image_path = functions.resource_path("assets/mp5/happening.png")
@@ -193,7 +193,7 @@ class App(customtkinter.CTk):
         return None
 
     def load_minigame_image(self, game_id):
-        if game_id == "GMPE01":
+        if game_id == "GMPE01" or game_id == "GMPEDX":
             coin_image_path = functions.resource_path("assets/mp4/minigame.png")
         elif game_id == "GP5E01":
             coin_image_path = functions.resource_path("assets/mp5/minigame.png")
@@ -213,7 +213,7 @@ class App(customtkinter.CTk):
         return None
 
     def load_coin_star_image(self, game_id):
-        if game_id == "GMPE01":
+        if game_id == "GMPE01" or game_id == "GMPEDX":
             coin_image_path = functions.resource_path("assets/mp4/coins.png")
         elif game_id == "GP5E01":
             coin_image_path = functions.resource_path("assets/mp5/coins.png")
@@ -727,7 +727,7 @@ class App(customtkinter.CTk):
         character_ids = self.get_character_id(game_id)
 
         # Generate image paths based on character IDs
-        if game_id == "GMPE01":
+        if game_id == "GMPE01" or game_id == "GMPEDX":
             image_paths = [functions.resource_path(f"assets/mp4/{character_id}.png") for character_id in character_ids]
         elif game_id == "GP5E01":
             image_paths = [functions.resource_path(f"assets/mp5/{character_id}.png") for character_id in character_ids]
@@ -803,7 +803,7 @@ class App(customtkinter.CTk):
             "RM8E01": [0x802282D1, 0x802282DB, 0x802282E5, 0x802282EF]
         }
 
-        if game_id == "GMPE01":
+        if game_id == "GMPE01" or game_id == "GMPEDX":
             character_map = {
                 "00": "mario",
                 "01": "luigi",
