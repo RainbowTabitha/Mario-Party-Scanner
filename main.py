@@ -454,6 +454,7 @@ class App(customtkinter.CTk):
         scene_id = self.get_scene_id(game_id)
         address_map = {
             "GMPE01": (0x8018FCFC, ["89", "90", "91", "92", "93", "94"]),
+            "GMPEDX": (0x8018FCFC, ["89", "90", "91", "92", "93", "94"]),
             "GP5E01": (0x8022A494, ["118", "120", "122", "124", "126", "128", "130"]),
             "GP6E01": (0x80265B74, ["123", "124", "125", "126", "127", "128"]),
             "GP7E01": (0x8029151C, ["122", "123", "124", "125", "126", "127"]),
@@ -471,6 +472,7 @@ class App(customtkinter.CTk):
     def get_player_stars(self, game_id, player_index):
         address_map = {
             "GMPE01": [0x8018FC62, 0x8018FC92, 0x8018FCC2, 0x8018FCF2],
+            "GMPEDX": [0x8018FC62, 0x8018FC92, 0x8018FCC2, 0x8018FCF2],
             "GP5E01": [0x8022A0A4, 0x8022A1AC, 0x8022A2B4, 0x8022A3BC],
             "GP6E01": [0x80265780, 0x80265888, 0x80265990, 0x80265A98],
             "GP7E01": [0x80290CD0, 0x80290DE0, 0x80290EF0, 0x80291000],
@@ -490,6 +492,7 @@ class App(customtkinter.CTk):
     def get_player_coins(self, game_id, player_index):
         address_map = {
             "GMPE01": [0x8018FC54, 0x8018FC84, 0x8018FCB4, 0x8018FCE4],
+            "GMPEDX": [0x8018FC54, 0x8018FC84, 0x8018FCB4, 0x8018FCE4],
             "GP5E01": [0x8022A090, 0x8022A198, 0x8022A2A0, 0x8022A3A8],
             "GP6E01": [0x8026576C, 0x80265874, 0x8026597C, 0x80265A84],
             "GP7E01": [0x80290CBE, 0x80290DCE, 0x80290EDE, 0x80290FEE],
@@ -509,6 +512,7 @@ class App(customtkinter.CTk):
     def get_player_mg(self, game_id, player_index):
         address_map = {
             "GMPE01": [0x8018FC56, 0x8018FC86, 0x8018FCB6, 0x8018FCE6],
+            "GMPEDX": [0x8018FC56, 0x8018FC86, 0x8018FCB6, 0x8018FCE6],
             "GP5E01": [0x8022A092, 0x8022A19A, 0x8022A2A2, 0x8022A3AA],
             "GP6E01": [0x8026576E, 0x80265876, 0x8026597E, 0x80265A86],
             "GP7E01": [0x80290CC0, 0x80290DD0, 0x80290EE0, 0x80290FF0]
@@ -528,6 +532,7 @@ class App(customtkinter.CTk):
     def get_player_coinStar(self, game_id, player_index):
         address_map = {
             "GMPE01": [0x8018FC5A, 0x8018FC8A, 0x8018FCBA, 0x8018FCEA],
+            "GMPEDX": [0x8018FC5A, 0x8018FC8A, 0x8018FCBA, 0x8018FCEA],
             "GP5E01": [0x8022A096, 0x8022A19E, 0x8022A2A6, 0x8022A3AE],
             "GP6E01": [0x80265784, 0x8026588C, 0x80265994, 0x80265A9C],
             "GP7E01": [0x80290CD4, 0x80290DE4, 0x80290EF4, 0x80291004]
@@ -546,6 +551,7 @@ class App(customtkinter.CTk):
     def get_player_happening(self, game_id, player_index):
         address_map = {
             "GMPE01": [0x8018FC4E, 0x8018FC7E, 0x8018FCAE, 0x8018FCDE],
+            "GMPEDX": [0x8018FC4E, 0x8018FC7E, 0x8018FCAE, 0x8018FCDE],
             "GP5E01": [0x8022A087, 0x8022A18F, 0x8022A297, 0x8022A39F], 
             "GP6E01": [0x80265767, 0x8026586E, 0x80265977, 0x80265A7E],
             "GP7E01": [0x80290CB7, 0x80290DC7, 0x80290ED7, 0x80290FE7]
@@ -610,6 +616,7 @@ class App(customtkinter.CTk):
         scene_id = self.get_scene_id(game_id)
         address_map = {
             "GMPE01": (0x8018FCFD, ["89", "90", "91", "92", "93", "94"]),
+            "GMPEDX": (0x8018FCFD, ["89", "90", "91", "92", "93", "94"]),
             "GP5E01": (0x8022A495, ["118", "120", "122", "124", "126", "128", "130"]),
             "GP6E01": (0x80265B75, ["123", "124", "125", "126", "127", "128"]),
             "GP7E01": (0x8029151D, ["122", "123", "124", "125", "126", "127"]),
@@ -627,6 +634,7 @@ class App(customtkinter.CTk):
     def get_scene_id(self, game_id):
         scene_id_map = {
             "GMPE01": 0x801D3CE3,
+            "GMPEDX": 0x801D3CE3,
             "GP5E01": 0x80288863,
             "GP6E01": 0x802C0257,
             "GP7E01": 0x802F2F3F,
